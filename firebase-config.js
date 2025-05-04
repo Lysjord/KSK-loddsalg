@@ -1,1 +1,1 @@
-console.log('firebase-config loaded')
+var firebaseConfig = {}; firebase.initializeApp(firebaseConfig);

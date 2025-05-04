@@ -1,1 +1,1 @@
-console.log('raffle script loaded')
+// raffle logic

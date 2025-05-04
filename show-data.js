@@ -1,1 +1,1 @@
-console.log('show-data script loaded')
+// show sponsors and prizes
