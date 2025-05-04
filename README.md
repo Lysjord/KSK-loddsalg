@@ -1,0 +1,2 @@
+# KSK-loddsalg
+Loddsalg
