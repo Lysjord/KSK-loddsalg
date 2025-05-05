@@ -1,1 +1,39 @@
-<!-- Loddsalg app HTML -->
+Ja – det kan jeg!
+Her er første del: forsiden for loddkjøp (index.html)
+
+
+---
+
+Fil 1: index.html
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>KSK Loddsalg</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/firebase-config.js" defer></script>
+    <script src="/app.js" defer></script>
+</head>
+<body>
+    <h1>KSK Loddsalg</h1>
+    <p>Lodd igjen: <span id="loddIgjen">5000</span></p>
+    <form id="loddsalgForm">
+        <input type="text" id="navn" placeholder="Ditt navn" required /><br />
+        <input type="tel" id="telefon" placeholder="Telefonnummer" required /><br />
+        <input type="number" id="antall" placeholder="Antall lodd" min="1" required /><br />
+        <select id="selger" required>
+            <option value="">Velg selger</option>
+        </select><br />
+        <button type="submit">Kjøp (Test Vipps)</button>
+    </form>
+    <div id="kvittering"></div>
+</body>
+</html>
+
+
+---
+
+Vil du jeg skal sende neste fil nå (style.css)?
+
