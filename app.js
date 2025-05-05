@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const selgerListe = ["Selger 1", "Selger 2", "Selger 3"];
-    const selgerSelect = document.getElementById("selger");
+    const selgerListe = [
+        "Velg fotballspiller",  // Første valg i rullegardin
+        "Spiller 1", "Spiller 2", "Spiller 3", "Spiller 4", "Spiller 5",
+        "Spiller 6", "Spiller 7", "Spiller 8", "Spiller 9", "Spiller 10",
+        "Spiller 11", "Spiller 12", "Spiller 13", "Spiller 14", "Spiller 15",
+        "Spiller 16", "Spiller 17", "Spiller 18", "Spiller 19", "Spiller 20"
+    ];
 
-    selgerListe.forEach(navn => {
+    const selgerSelect = document.getElementById("selger");
+    selgerListe.forEach((navn, index) => {
         const option = document.createElement("option");
-        option.value = navn;
+        option.value = index === 0 ? "" : navn;
         option.textContent = navn;
         selgerSelect.appendChild(option);
     });
@@ -36,7 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         kvittering.innerHTML = `Takk for kjøpet, ${navn}! Du har kjøpt ${antall} lodd.`;
         kvittering.style.display = "block";
 
-        // Firebase lagring
         if (window.firebase) {
             const db = firebase.firestore();
             const kjøpRef = db.collection("loddkjop");
@@ -50,4 +55,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const loddNumre = [];
             for (let i = 1; i <= antall; i++) {
-                loddNumre.push(t
+                loddNumre.push(tildelte + i);
+            }
+
+            kjøp.loddNumre = loddNumre;
+            await kjøpRef.add(kjøp);
+            document.getElementById("loddIgjen").textContent = 5000 - (tildelte + antall);
+        }
+    });
+});
