@@ -1,1 +1,36 @@
-/* Loddsalg app CSS */
+body {
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+    padding: 2rem;
+}
+
+form, #adminContent {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    max-width: 500px;
+    margin: auto;
+}
+
+input, select, button {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+#kvittering {
+    margin-top: 1rem;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 1rem;
+    display: none;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    text-align: center;
+}
