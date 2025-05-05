@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const selgerListe = [
+    const fotballspillerListe = [
         "Spiller 1", "Spiller 2", "Spiller 3", "Spiller 4", "Spiller 5",
         "Spiller 6", "Spiller 7", "Spiller 8", "Spiller 9", "Spiller 10",
         "Spiller 11", "Spiller 12", "Spiller 13", "Spiller 14", "Spiller 15",
