@@ -71,3 +71,22 @@ input, select, button {
   padding: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+header {
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding-top: 1rem;         /* Flytter logoen litt opp */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+h1 {
+  margin: 1rem 0 1rem 0;     /* Økt mellomrom over og under overskriften */
+  font-size: 1.6rem;
+}
+
+#solgteInfo {
+  margin-bottom: 1rem;       /* Litt ekstra luft før skjemaet */
+}
