@@ -78,5 +78,16 @@
       }
     });
   </script>
+  <script>
+  // Hent antall solgte lodd fra Firestore
+  firebase.firestore().collection("loddkjop").get().then(snapshot => {
+    let total = 0;
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.antall) total += data.antall;
+    });
+    document.getElementById("solgteLodd").textContent = total;
+  });
+</script>
 </body>
 </html>
