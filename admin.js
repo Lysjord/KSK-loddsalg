@@ -1,4 +1,4 @@
-
+p
 // Admin-innlogging
 function login() {
   const user = document.getElementById("adminUser").value;
@@ -88,4 +88,61 @@ function trekkVinner() {
   const tilfeldig = alleLodd[Math.floor(Math.random() * alleLodd.length)];
   document.getElementById("trekningsresultat").innerHTML = 
     `<strong>Vinner:</strong><br>Lodd nr ${tilfeldig.nr}<br>${tilfeldig.navn}<br>${tilfeldig.telefon}<br>Solgt av: ${tilfeldig.selger}`;
+}
+// Redigerbare lister (lagres midlertidig i Firestore for enkelhet)
+
+// LAST INN spillere/premier/sponsorer
+document.addEventListener("DOMContentLoaded", () => {
+  if (location.pathname.includes("admin.html")) {
+    firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+      const data = doc.exists ? doc.data() : {};
+      visRedigerbarListe("spillere", data.spillere || []);
+      visRedigerbarListe("premier", data.premier || []);
+      visRedigerbarListe("sponsorer", data.sponsorer || []);
+    });
+  }
+});
+
+function visRedigerbarListe(type, liste) {
+  let html = `<ul id="${type}Liste">`;
+  liste.forEach((item, i) => {
+    html += `<li>
+      <input type="text" value="${item}" onchange="lagreEndring('${type}', ${i}, this.value)">
+      <button onclick="fjernElement('${type}', ${i})">Fjern</button>
+    </li>`;
+  });
+  html += `</ul>
+    <button onclick="leggTilElement('${type}')">+ Legg til ${type}</button>`;
+  document.getElementById(`${type}Redigering`).innerHTML = html;
+}
+
+function lagreEndring(type, index, nyVerdi) {
+  firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+    const data = doc.data() || {};
+    if (!data[type]) data[type] = [];
+    data[type][index] = nyVerdi;
+    firebase.firestore().collection("system").doc("konfig").set(data);
+  });
+}
+
+function leggTilElement(type) {
+  firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+    const data = doc.data() || {};
+    if (!data[type]) data[type] = [];
+    data[type].push("Ny oppføring");
+    firebase.firestore().collection("system").doc("konfig").set(data).then(() => {
+      visRedigerbarListe(type, data[type]);
+    });
+  });
+}
+
+function fjernElement(type, index) {
+  firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+    const data = doc.data() || {};
+    if (!data[type]) return;
+    data[type].splice(index, 1);
+    firebase.firestore().collection("system").doc("konfig").set(data).then(() => {
+      visRedigerbarListe(type, data[type]);
+    });
+  });
 }
