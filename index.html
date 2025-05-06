@@ -79,5 +79,57 @@
     document.getElementById("solgteLodd").textContent = total;
   });
 </script>
+  <script>
+  // Hent spillere direkte fra "Velg fotballspillere"-samlingen i Firestore
+  firebase.firestore().collection("Velg fotballspillere").get().then((querySnapshot) => {
+    const selgerSelect = document.getElementById("selger");
+    querySnapshot.forEach((doc) => {
+      const navn = doc.data().Navn;
+      const opt = document.createElement("option");
+      opt.value = navn;
+      opt.textContent = navn;
+      selgerSelect.appendChild(opt);
+    });
+  });
+
+  // Hent sponsorbilder fra Firestore og vis dem
+  firebase.firestore().collection("Sponsorer").get().then((querySnapshot) => {
+    const container = document.getElementById("sponsorVisning");
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const div = document.createElement("div");
+      div.className = "sponsor-card";
+      const img = document.createElement("img");
+      img.src = data.bildeurl;
+      img.alt = data.Navn;
+      const caption = document.createElement("p");
+      caption.textContent = data.Navn;
+      div.appendChild(img);
+      div.appendChild(caption);
+      container.appendChild(div);
+    });
+  });
+
+  // Registrer loddkjøp i Firestore
+  document.getElementById("kjopSkjema").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const navn = document.getElementById("navn").value.trim();
+    const telefon = document.getElementById("telefon").value.trim();
+    const antall = parseInt(document.getElementById("antall").value);
+    const selger = document.getElementById("selger").value;
+
+    if (!navn || !telefon || !antall || !selger) return alert("Fyll ut alle felter.");
+
+    firebase.firestore().collection("loddkjop").add({
+      navn, telefon, antall, selger, tidspunkt: new Date()
+    }).then(() => {
+      alert("Takk for kjøpet! Loddene er registrert.");
+      document.getElementById("kjopSkjema").reset();
+    }).catch((error) => {
+      console.error("Feil ved registrering:", error);
+      alert("Noe gikk galt. Prøv igjen.");
+    });
+  });
+</script>
 </body>
 </html>
