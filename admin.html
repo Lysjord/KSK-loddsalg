@@ -1,25 +1,47 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8">
-    <title>Adminpanel – KSK Loddsalg</title>
-    <link rel="stylesheet" href="/style.css">
-    <script src="/firebase-config.js" defer></script>
-    <script src="/admin.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Admin – KSK Loddsalg</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="/firebase-config.js"></script>
+  <script src="/admin.js" defer></script>
 </head>
 <body>
-    <h1>Adminpanel – KSK Loddsalg</h1>
+  <h1>Administratorpanel</h1>
 
-    <div id="loginForm">
-        <input type="email" id="adminUser" placeholder="Brukernavn" /><br>
-        <input type="password" id="adminPass" placeholder="Passord" /><br>
-        <button onclick="login()">Logg inn</button>
-    </div>
+  <div id="loginForm">
+    <input type="email" id="adminUser" placeholder="Brukernavn"><br>
+    <input type="password" id="adminPass" placeholder="Passord"><br>
+    <button onclick="login()">Logg inn</button>
+  </div>
 
-    <div id="adminContent" style="display:none;">
-        <button onclick="exportData()">Eksporter til CSV</button>
-        <h2>Oversikt over alle kjøp</h2>
-        <div id="kjopTabell"></div>
-    </div>
+  <div id="adminContent" style="display:none;">
+    <h2>Oversikt over loddkjøp</h2>
+    <input type="text" id="kjopSearch" placeholder="Søk etter navn eller telefon...">
+    <div id="kjopTabell"></div>
+    <button onclick="exportKjop()">Last ned kjøpsdata (CSV)</button>
+
+    <h2>Salgsstatistikk per spiller</h2>
+    <div id="statistikkTabell"></div>
+    <button onclick="exportStatistikk()">Last ned salgsstatistikk (CSV)</button>
+
+    <h2>Trekning</h2>
+    <button onclick="trekkVinner()">Trekk tilfeldig vinner</button>
+    <div id="trekningsresultat"></div>
+
+    <h2>Rediger spillere</h2>
+    <div id="spillerRedigering"></div>
+
+    <h2>Rediger premier</h2>
+    <div id="premieRedigering"></div>
+
+    <h2>Rediger sponsorer (inkl. bilde)</h2>
+    <div id="sponsorRedigering"></div>
+    <input type="file" id="sponsorBilde" accept="image/*">
+    <button onclick="lastOppSponsor()">Last opp sponsorbilde</button>
+  </div>
 </body>
 </html>
