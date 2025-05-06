@@ -39,19 +39,16 @@
 <h2 style="margin-top: 10px; text-align: center;">Våre sponsorer</h2>
 <div id="sponsorVisning" class="sponsor-container" style="text-align: center;"></div>  <script>
     // Hent spillere fra Firestore
-    firebase.firestore().collection("system").doc("data").get().then((doc) => {
-  const data = doc.data();
+    firebase.firestore().collection("Velg fotballspillere").get().then((querySnapshot) => {
   const selgerSelect = document.getElementById("selger");
-  if (data && data.spillere) {
-    data.spillere.forEach(navn => {
-      const opt = document.createElement("option");
-      opt.value = navn;
-      opt.textContent = navn;
-      selgerSelect.appendChild(opt);
-    });
-  }
+  querySnapshot.forEach((doc) => {
+    const navn = doc.data().Navn;
+    const opt = document.createElement("option");
+    opt.value = navn;
+    opt.textContent = navn;
+    selgerSelect.appendChild(opt);
+  });
 });
-
     // Hent sponsorbilder fra Firestore og vis dem
     firebase.firestore().collection("system").doc("konfig").get().then(doc => {
       const data = doc.data();
