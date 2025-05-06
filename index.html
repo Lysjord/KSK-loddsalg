@@ -36,13 +36,8 @@
 
     <button onclick="window.location.href='/premieoversikt.html'">Se premieoversikt</button>
   </main>
-<h2 style="text-align: center; margin-top: 40px;">Våre sponsorer</h2>
-<section style="text-align: center; padding: 1rem 0;">
-
-    <div id="sponsorVisning" class="sponsorer"></div>
-  </section>
-
-  <script>
+<h2 style="margin-top: 10px; text-align: center;">Våre sponsorer</h2>
+<div id="sponsorVisning" class="sponsor-container" style="text-align: center;"></div>  <script>
     // Hent spillere fra Firestore
     firebase.firestore().collection("system").doc("konfig").get().then(doc => {
       const data = doc.data();
