@@ -1,88 +1,75 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>KSK Loddsalg</title>
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="/firebase-config.js"></script>
-<script src="/app.js" defer></script>
+  <meta charset="UTF-8">
+  <title>KSK Loddsalg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
 
+  <!-- Firebase SDK-er -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  <script src="/firebase-config.js"></script>
 </head>
 <body>
-    <!-- KSK-logo øverst til høyre -->
-    <img src="Ksk2010.jpg" alt="KSK Logo" class="logo" />
-
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:1rem;">
     <h1>KSK Loddsalg</h1>
+    <img src="ksk2010.jpg" alt="KSK Logo" style="height:60px;">
+  </header>
 
-    <p>Lodd igjen: <span id="loddIgjen">5000</span></p>
+  <main style="max-width:400px;margin:auto;padding:1rem;">
+    <p><strong>Lodd igjen:</strong> <span id="loddTeller">5000</span></p>
 
-    <form id="loddsalgForm">
-        <input type="text" id="navn" placeholder="Ditt navn" required /><br />
-        <input type="tel" id="telefon" placeholder="Telefonnummer" required /><br />
-        <input type="number" id="antall" placeholder="Antall lodd" min="1" required /><br />
+    <form id="kjopSkjema">
+      <input type="text" id="navn" placeholder="Ditt navn" required><br>
+      <input type="tel" id="telefon" placeholder="Telefonnummer" required><br>
+      <input type="number" id="antall" placeholder="Antall lodd" required><br>
 
-        <select id="selger" required>
-            <option value="" disabled selected>Velg fotballspiller</option>
-            <option>Spiller 1</option>
-            <option>Spiller 2</option>
-            <option>Spiller 3</option>
-            <option>Spiller 4</option>
-            <option>Spiller 5</option>
-            <option>Spiller 6</option>
-            <option>Spiller 7</option>
-            <option>Spiller 8</option>
-            <option>Spiller 9</option>
-            <option>Spiller 10</option>
-            <option>Spiller 11</option>
-            <option>Spiller 12</option>
-            <option>Spiller 13</option>
-            <option>Spiller 14</option>
-            <option>Spiller 15</option>
-            <option>Spiller 16</option>
-            <option>Spiller 17</option>
-            <option>Spiller 18</option>
-            <option>Spiller 19</option>
-            <option>Spiller 20</option>
-        </select><br />
+      <select id="selger" required>
+        <option value="">Velg fotballspiller</option>
+      </select><br>
 
-        <button type="submit">Kjøp (Test Vipps)</button>
+      <button type="submit">Kjøp (Test Vipps)</button>
     </form>
 
-    <br />
-    <button onclick="window.location.href='premier.html'">Se premieoversikt</button>
+    <button onclick="window.location.href='/premieoversikt.html'">Se premieoversikt</button>
+  </main>
 
-    <div id="kvittering"></div>
-    <hr />
-<h2>Sponsorer</h2>
-<div class="sponsorer">
-    <img src="sponsor1.jpg" alt="Sponsor 1" />
-    <img src="sponsor2.jpg" alt="Sponsor 2" />
-    <img src="sponsor3.jpg" alt="Sponsor 3" />
-    <!-- Legg til flere etter behov -->
-</div>
+  <hr style="margin:2rem 0;">
+
+  <section style="text-align:center;padding:1rem;">
     <h2>Våre sponsorer</h2>
-<div id="sponsorVisning" class="sponsorer"></div>
-<!-- Firebase og visning av sponsorlogoer -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-<script src="/firebase-config.js"></script>
+    <div id="sponsorVisning" class="sponsorer"></div>
+  </section>
 
-<script>
-firebase.firestore().collection("system").doc("konfig").get().then(doc => {
-  const data = doc.data();
-  if (data && data.sponsorbilder) {
-    const container = document.getElementById("sponsorVisning");
-    data.sponsorbilder.forEach(url => {
-      const img = document.createElement("img");
-      img.src = url;
-      container.appendChild(img);
+  <script>
+    // Last inn spillere fra Firestore
+    firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+      const data = doc.data();
+      const selgerSelect = document.getElementById("selger");
+      if (data && data.spillere) {
+        data.spillere.forEach(navn => {
+          const opt = document.createElement("option");
+          opt.value = navn;
+          opt.textContent = navn;
+          selgerSelect.appendChild(opt);
+        });
+      }
     });
-  }
-});
-</script>
+
+    // Vis sponsorbilder
+    firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+      const data = doc.data();
+      if (data && data.sponsorbilder) {
+        const container = document.getElementById("sponsorVisning");
+        data.sponsorbilder.forEach(url => {
+          const img = document.createElement("img");
+          img.src = url;
+          container.appendChild(img);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
