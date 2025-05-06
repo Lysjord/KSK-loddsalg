@@ -39,7 +39,7 @@
 <h2 style="margin-top: 10px; text-align: center;">Våre sponsorer</h2>
 <div id="sponsorVisning" class="sponsor-container" style="text-align: center;"></div>  <script>
     // Hent spillere fra Firestore
-    firebase.firestore().collection("Velg fotballspiller ").get().then((querySnapshot) => {
+    firebase.firestore().collection("Velg fotballspiller").get().then((querySnapshot) => {
   const selgerSelect = document.getElementById("selger");
   querySnapshot.forEach((doc) => {
     const navn = doc.data().Navn;
