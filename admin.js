@@ -146,3 +146,33 @@ function fjernElement(type, index) {
     });
   });
 }
+// LAST OPP SPONSORBILDE
+function lastOppSponsor() {
+  const fil = document.getElementById("sponsorBilde").files[0];
+  if (!fil) return alert("Velg et bilde først");
+
+  const storageRef = firebase.storage().ref("sponsorer/" + fil.name);
+  storageRef.put(fil).then(snapshot => {
+    return snapshot.ref.getDownloadURL();
+  }).then(url => {
+    // Lagre URL i system/konfig -> sponsorbilder
+    firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+      const data = doc.data() || {};
+      if (!data.sponsorbilder) data.sponsorbilder = [];
+      data.sponsorbilder.push(url);
+      firebase.firestore().collection("system").doc("konfig").set(data).then(() => {
+        alert("Sponsorbilde lastet opp!");
+        visSponsorbilder(data.sponsorbilder);
+      });
+    });
+  });
+}
+
+function visSponsorbilder(liste) {
+  let html = "<div style='display:flex;flex-wrap:wrap;gap:10px;'>";
+  liste.forEach(url => {
+    html += `<img src="${url}" style="height:80px;border:1px solid #ccc;" />`;
+  });
+  html += "</div>";
+  document.getElementById("sponsorRedigering").innerHTML += html;
+}
