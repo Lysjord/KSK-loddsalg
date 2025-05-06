@@ -65,5 +65,24 @@
 </div>
     <h2>Våre sponsorer</h2>
 <div id="sponsorVisning" class="sponsorer"></div>
+<!-- Firebase og visning av sponsorlogoer -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="/firebase-config.js"></script>
+
+<script>
+firebase.firestore().collection("system").doc("konfig").get().then(doc => {
+  const data = doc.data();
+  if (data && data.sponsorbilder) {
+    const container = document.getElementById("sponsorVisning");
+    data.sponsorbilder.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      container.appendChild(img);
+    });
+  }
+});
+</script>
 </body>
 </html>
