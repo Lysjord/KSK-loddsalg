@@ -1,41 +1,42 @@
-document.getElementById('kjopSkjema').addEventListener('submit', async function (e) { e.preventDefault();
+// Funksjon for å registrere loddkjøp og lagre i Firestore function registrerLodd() { const navn = document.getElementById('navn').value; const telefon = document.getElementById('telefon').value; const antall = parseInt(document.getElementById('antall').value); const selger = document.getElementById('selger').value; const tidspunkt = new Date().toLocaleString();
 
-const navn = document.getElementById('navn').value;
-const telefon = document.getElementById('telefon').value;
-const antall = parseInt(document.getElementById('antall').value);
-const selger = document.getElementById('selger').value;
-const loddkjopRef = firebase.firestore().collection('loddkjop');
+// Hent eksisterende loddnummer
+firebase.firestore().collection('system').doc('loddnummer').get().then((doc) => {
+    let sisteLodd = doc.exists ? doc.data().sisteLodd : 0;
+    let loddnummerListe = [];
 
-try {
-    const loddkjopSnapshot = await loddkjopRef.get();
-    const antallSolgteLodd = loddkjopSnapshot.docs.reduce((sum, doc) => {
-        const data = doc.data();
-        return sum + (data.lodd ? data.lodd.length : 0);
-    }, 0);
-
-    const startLoddnummer = antallSolgteLodd + 1;
-    const loddNumre = [];
-
-    for (let i = 0; i < antall; i++) {
-        loddNumre.push(startLoddnummer + i);
+    // Opprett loddnummer for dette kjøpet
+    for (let i = 1; i <= antall; i++) {
+        sisteLodd++;
+        loddnummerListe.push(sisteLodd);
     }
 
-    await loddkjopRef.add({
+    // Lagre loddkjøpet i Firestore
+    firebase.firestore().collection('loddkjop').add({
         navn: navn,
         telefon: telefon,
-        selger: selger,
         antall: antall,
-        lodd: loddNumre,
-        tidspunkt: new Date().toISOString()
+        selger: selger,
+        tidspunkt: tidspunkt,
+        loddnummer: loddnummerListe
+    }).then(() => {
+        console.log('Loddkjøp lagret med loddnummer:', loddnummerListe);
+
+        // Oppdater siste loddnummer i Firestore
+        firebase.firestore().collection('system').doc('loddnummer').set({
+            sisteLodd: sisteLodd
+        });
+
+        // Oppdater solgte lodd i appen
+        firebase.firestore().collection('loddkjop').get().then((snapshot) => {
+            let totaltSolgte = 0;
+            snapshot.forEach((doc) => {
+                totaltSolgte += doc.data().antall;
+            });
+            document.getElementById('solgteLodd').textContent = totaltSolgte;
+        });
     });
-
-    alert('Kjøp registrert. Loddnumre: ' + loddNumre.join(', '));
-    document.getElementById('kjopSkjema').reset();
-
-} catch (error) {
-    console.error('Feil ved registrering av kjøp:', error);
-    alert('Det oppstod en feil ved registrering av kjøp. Vennligst prøv igjen.');
-}
-
 });
+
+}
 
