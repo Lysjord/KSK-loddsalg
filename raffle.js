@@ -1,41 +1,41 @@
-// Oppdatert funksjon for å registrere loddkjøp med loddnumre function registrerLoddkjop(navn, telefon, antall, selger) { const loddkjopRef = firebase.firestore().collection("loddkjop"); const loddRef = firebase.firestore().collection("loddnumre");
+document.getElementById('kjopSkjema').addEventListener('submit', async function (e) { e.preventDefault();
 
-// Hent siste loddnummer
-loddRef.orderBy("nummer", "desc").limit(1).get()
-    .then((snapshot) => {
-        let sisteLoddNummer = 0;
-        if (!snapshot.empty) {
-            sisteLoddNummer = snapshot.docs[0].data().nummer;
-        }
+const navn = document.getElementById('navn').value;
+const telefon = document.getElementById('telefon').value;
+const antall = parseInt(document.getElementById('antall').value);
+const selger = document.getElementById('selger').value;
+const loddkjopRef = firebase.firestore().collection('loddkjop');
 
-        // Generer loddnumre
-        const nyeLoddNumre = [];
-        for (let i = 1; i <= antall; i++) {
-            sisteLoddNummer++;
-            nyeLoddNumre.push(sisteLoddNummer);
-            // Legg til hvert loddnummer i 'loddnumre'-kolleksjonen
-            loddRef.add({ nummer: sisteLoddNummer });
-        }
+try {
+    const loddkjopSnapshot = await loddkjopRef.get();
+    const antallSolgteLodd = loddkjopSnapshot.docs.reduce((sum, doc) => {
+        const data = doc.data();
+        return sum + (data.lodd ? data.lodd.length : 0);
+    }, 0);
 
-        // Opprett kjøpsdokument
-        loddkjopRef.add({
-            navn: navn,
-            telefon: telefon,
-            antall: antall,
-            selger: selger,
-            loddnumre: nyeLoddNumre,
-            tidspunkt: firebase.firestore.Timestamp.now()
-        }).then(() => {
-            console.log("Loddkjøp registrert med loddnumre:", nyeLoddNumre);
-        }).catch((error) => {
-            console.error("Feil ved registrering av loddkjøp:", error);
-        });
-    })
-    .catch((error) => {
-        console.error("Feil ved henting av siste loddnummer:", error);
+    const startLoddnummer = antallSolgteLodd + 1;
+    const loddNumre = [];
+
+    for (let i = 0; i < antall; i++) {
+        loddNumre.push(startLoddnummer + i);
+    }
+
+    await loddkjopRef.add({
+        navn: navn,
+        telefon: telefon,
+        selger: selger,
+        antall: antall,
+        lodd: loddNumre,
+        tidspunkt: new Date().toISOString()
     });
 
+    alert('Kjøp registrert. Loddnumre: ' + loddNumre.join(', '));
+    document.getElementById('kjopSkjema').reset();
+
+} catch (error) {
+    console.error('Feil ved registrering av kjøp:', error);
+    alert('Det oppstod en feil ved registrering av kjøp. Vennligst prøv igjen.');
 }
 
-// Eksempel på bruk: // registrerLoddkjop("Tomas Fremnesvik", "41210238", 3, "Viljar");
+});
 
