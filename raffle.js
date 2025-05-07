@@ -2,7 +2,7 @@
 
 // Hent eksisterende loddnummer
 firebase.firestore().collection('system').doc('loddnummer').get().then((doc) => {
-    let sisteLodd = doc.exists ? doc.data().sisteLodd : 0;
+    let sisteLodd = doc.exists ? doc.data().sisteLodd : 1;
     let loddnummerListe = [];
 
     // Opprett loddnummer for dette kjøpet
